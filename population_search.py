@@ -68,12 +68,19 @@ def save_pickle(path, value):
         pickle.dump(value, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def search(amounts, year):
+def search(amounts, year, reuse_baseline=False):
     private = Path("private_outputs")
     private.mkdir(exist_ok=True)
     log("loading certified default US dataset")
     base = pe.us.managed_microsimulation()
-    save_pickle(private / "provenance.pkl", base.policyengine_bundle)
+    if reuse_baseline:
+        assert len(amounts) == 1, "Run each independent scenario in its own process"
+        with (private / "provenance.pkl").open("rb") as handle:
+            previous = pickle.load(handle)
+        for key in ("bundle_id", "runtime_dataset_sha256"):
+            assert previous[key] == base.policyengine_bundle[key]
+    else:
+        save_pickle(private / "provenance.pkl", base.policyengine_bundle)
     log(f"bundle: {json.dumps(base.policyengine_bundle, default=str)}")
     heads = base.calc("is_tax_unit_head", period=year)
     heads_per_unit = base.calc("is_tax_unit_head", period=year, map_to="tax_unit")
@@ -95,10 +102,17 @@ def search(amounts, year):
         f"input rows: {len(household_ids)} households, {len(heads_per_unit)} tax units, {len(heads)} people"
     )
 
-    baseline = snapshot(base, year)
-    save_pickle(private / "baseline.pkl", baseline)
-    save_pickle(private / "household_ids.pkl", household_ids)
-    save_pickle(private / "person_households.pkl", person_households)
+    if reuse_baseline:
+        with (private / "baseline.pkl").open("rb") as handle:
+            baseline = pickle.load(handle)
+        with (private / "household_ids.pkl").open("rb") as handle:
+            assert household_ids.equals(pickle.load(handle))
+        assert baseline["charitable_cash_donations"].equals(cash_by_household)
+    else:
+        baseline = snapshot(base, year)
+        save_pickle(private / "baseline.pkl", baseline)
+        save_pickle(private / "household_ids.pkl", household_ids)
+        save_pickle(private / "person_households.pkl", person_households)
     assert baseline["household_net_income"].notna().all()
     public = {
         "year": year,
@@ -114,10 +128,18 @@ def search(amounts, year):
         "candidate_status": "Unverified screen; individual reruns and source checks required before interpreting as real tax-law exceptions.",
         "scenarios": [],
     }
+    if reuse_baseline and Path("population_summary.json").exists():
+        public = json.loads(Path("population_summary.json").read_text())
+        assert public["year"] == year
+    if not amounts:
+        Path("population_summary.json").write_text(json.dumps(public, indent=2) + "\n")
     for amount in amounts:
         log(f"starting additional gift ${amount:g} per tax unit")
         name = f"ordinary_cash_gift_{amount:g}"
-        scenario = base.get_branch(name)
+        # A fresh input-only managed simulation avoids retaining two complete
+        # population calculation caches in RAM. Branches remain supported for
+        # a caller deliberately running a small bounded cohort in one process.
+        scenario = base if reuse_baseline else base.get_branch(name)
         scenario.set_input(
             "charitable_cash_donations", year, original_cash + heads * amount
         )
@@ -194,7 +216,11 @@ def search(amounts, year):
                 "numerical_tolerance": tolerance,
             },
         )
-        public["scenarios"].append(row)
+        public["scenarios"] = [
+            item
+            for item in public["scenarios"]
+            if item["additional_gift_per_tax_unit"] != amount
+        ] + [row]
         Path("population_summary.json").write_text(
             json.dumps(public, indent=2, default=str) + "\n"
         )
@@ -209,18 +235,22 @@ def search(amounts, year):
                 ],
             },
         )
-        base.branches.pop(name)
+        if not reuse_baseline:
+            base.branches.pop(name)
         del scenario, out, delta, added_gift, net_gain, tax_saving, benefit_gain
         gc.collect()
-    assert base.calc("charitable_cash_donations", period=year).equals(original_cash)
+    if not reuse_baseline:
+        assert base.calc("charitable_cash_donations", period=year).equals(original_cash)
     log("all requested full scenarios completed")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", type=int, default=2026)
+    parser.add_argument("--reuse-baseline", action="store_true")
+    parser.add_argument("--baseline-only", action="store_true")
     parser.add_argument(
         "--amounts", nargs="+", type=float, default=[0, 1, 10, 100, 1_000, 10_000]
     )
     args = parser.parse_args()
-    search(args.amounts, args.year)
+    search([] if args.baseline_only else args.amounts, args.year, args.reuse_baseline)

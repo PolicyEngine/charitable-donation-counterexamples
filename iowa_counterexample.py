@@ -44,7 +44,7 @@ def run(gift):
                 "employment_income": WAGES,
                 "charitable_cash_donations": gift,
             },
-            {"age": 4},
+            {"age": 8},
         ],
         marital_unit=[{"members": [0]}, {"members": [1]}],
         tax_unit={"filing_status": "HEAD_OF_HOUSEHOLD"},
@@ -93,7 +93,7 @@ if __name__ == "__main__":
         "year": YEAR,
         "versions": {p: md.version(p) for p in ("policyengine", "policyengine-us")},
         "assumptions": [
-            "Iowa resident, single parent age40, dependent age4, qualifying HOH filing status",
+            "Iowa resident, single parent age40, dependent age8, qualifying HOH filing status",
             "Employment wages114150, no other income or deductions",
             "3000 of unreimbursed employment-related qualifying childcare expenses",
             "10 cash donation to eligible public charity, no goods/services or state credit",

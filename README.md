@@ -13,7 +13,7 @@ PolicyEngine estimates the following for hypothetical single adults, age 40, und
 
 ## Iowa: a deduction restores a refundable childcare credit
 
-A hypothetical Iowa head-of-household filer, age 40, supports a four-year-old and pays $3,000 in unreimbursed, employment-related qualifying childcare expenses. The parent earns $114,150 and has no other income or deductions. Before giving, the $24,150 standard deduction leaves federal and Iowa taxable income at $90,000.
+A hypothetical Iowa head-of-household filer, age 40, supports an eight-year-old and pays $3,000 in unreimbursed, employment-related qualifying childcare expenses. The parent earns $114,150 and has no other income or deductions. Before giving, the $24,150 standard deduction leaves federal and Iowa taxable income at $90,000.
 
 A $10 cash gift to an eligible charity qualifies for the 2026 federal deduction for nonitemizers and reduces taxable income to $89,990. Iowa's refundable childcare credit increases from zero to $180 because eligibility requires taxable income below $90,000. Federal income tax falls by $2.20 and Iowa net income tax falls by $180.38. Total tax savings of about $182.58 exceed the gift by $172.58. Both runs use the standard deduction; neither uses a donation tax credit. The new charitable deduction reduces taxable income, while adjusted gross income stays unchanged.
 

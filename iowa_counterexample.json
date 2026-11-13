@@ -6,7 +6,7 @@
     "policyengine-us": "2.2.1"
   },
   "assumptions": [
-    "Iowa resident, single parent age40, dependent age4, qualifying HOH filing status",
+    "Iowa resident, single parent age40, dependent age8, qualifying HOH filing status",
     "Employment wages114150, no other income or deductions",
     "3000 of unreimbursed employment-related qualifying childcare expenses",
     "10 cash donation to eligible public charity, no goods/services or state credit",
