@@ -1,0 +1,144 @@
+"""Replay unusual records in a closed, managed household cohort.
+
+Outputs contain record-level values and therefore stay ignored. The replay
+compares automatic itemization with two alternative legal filing choices.
+"""
+
+import gc
+import json
+from pathlib import Path
+
+import policyengine as pe
+from policyengine.core.scoping_strategy import RowFilterStrategy
+
+from inspect_population import read_pickle
+from population_search import log
+
+
+EXTRAS = [
+    "household_id",
+    "household_net_income",
+    "household_tax",
+    "household_benefits",
+    "charitable_cash_donations",
+    "income_tax",
+    "state_income_tax",
+    "taxable_income",
+    "tax_unit_itemizes",
+    "charitable_deduction_for_non_itemizers",
+    "charitable_deduction",
+    "cdcc",
+    "cdcc_potential",
+    "ks_cdcc",
+    "nj_cdcc",
+    "ok_cdcc",
+    "me_cdcc",
+    "la_cdcc",
+    "ga_itemizer_credit_potential",
+    "ia_cdcc",
+    "dc_kccatc",
+]
+
+
+def snapshot(sim):
+    return {
+        name: sim.calc(name, period=2026, map_to="household")
+        for name in EXTRAS
+        if name in sim.tax_benefit_system.variables
+    }
+
+
+def main():
+    private = Path("private_outputs")
+    ids = read_pickle(private / "household_ids.pkl")
+    selected = set()
+    scenarios = []
+    for path in sorted(private.glob("ordinary_cash_gift_[0-9]*.pkl")):
+        if path.stem.endswith("_candidates"):
+            continue
+        amount = float(path.stem.removeprefix("ordinary_cash_gift_"))
+        if amount == 0:
+            continue
+        result = read_pickle(path)
+        candidates = (result["net_gain"] > result["numerical_tolerance"]) & (
+            result["added_gift"] > 0
+        )
+        for value in ids[candidates]:
+            selected.add(int(value))
+        # Include records where the smallest gift increased state tax.
+        if amount == 1:
+            for value in ids[result["delta"]["state_income_tax"] > 0.02]:
+                selected.add(int(value))
+        scenarios.append(amount)
+    if not selected:
+        log("No records selected for replay")
+        return
+    log(f"Replaying {len(selected)} households")
+    base = pe.us.managed_microsimulation(
+        scoping_strategy=RowFilterStrategy(
+            variable_name="household_id", variable_value=sorted(selected)
+        )
+    )
+    household_ids = base.calc("household_id", period=2026)
+    base_out = snapshot(base)
+    national = read_pickle(private / "baseline.pkl")
+    national_positions = {int(value): position for position, value in enumerate(ids)}
+    for name in ("household_net_income", "household_tax", "household_benefits"):
+        for index, household_id in enumerate(household_ids):
+            expected = float(national[name].iloc[national_positions[int(household_id)]])
+            observed = float(base_out[name].iloc[index])
+            assert abs(observed - expected) <= abs(expected) * 1e-6 + 0.02, (
+                name,
+                int(household_id),
+                observed,
+                expected,
+            )
+    cash = base.calc("charitable_cash_donations", period=2026)
+    heads = base.calc("is_tax_unit_head", period=2026)
+    units = base.calc("tax_unit_id", period=2026)
+    result_rows = []
+    for amount in [0, *scenarios]:
+        for mode in ("automatic", "standard", "itemized"):
+            name = f"replay_{amount:g}_{mode}"
+            branch = base.get_branch(name)
+            branch.set_input("charitable_cash_donations", 2026, cash + heads * amount)
+            if mode != "automatic":
+                branch.set_input(
+                    "tax_unit_itemizes", 2026, units * 0 + int(mode == "itemized")
+                )
+            branch.drop_computed_arrays()
+            out = snapshot(branch)
+            for index, household_id in enumerate(household_ids):
+                added_gift = (
+                    out["charitable_cash_donations"].iloc[index]
+                    - base_out["charitable_cash_donations"].iloc[index]
+                )
+                result_rows.append(
+                    {
+                        "household_id": int(household_id),
+                        "gift_per_tax_unit": amount,
+                        "mode": mode,
+                        "actual_added_gift": float(added_gift),
+                        "change_in_net_income_after_gift": float(
+                            out["household_net_income"].iloc[index]
+                            - base_out["household_net_income"].iloc[index]
+                            - added_gift
+                        ),
+                        "outputs": {
+                            key: float(series.iloc[index])
+                            for key, series in out.items()
+                        },
+                    }
+                )
+            base.branches.pop(name)
+            del branch, out
+            gc.collect()
+            log(f"Finished {name}")
+    (private / "candidate_replays.json").write_text(
+        json.dumps(result_rows, indent=2) + "\n"
+    )
+    log("Replay completed")
+
+
+if __name__ == "__main__":
+    main()

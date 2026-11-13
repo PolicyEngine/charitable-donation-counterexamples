@@ -2,7 +2,7 @@
 
 An ordinary charitable deduction usually saves a fraction of the gift. The broader claim that every gift must cost more than its tax savings has exceptions.
 
-PolicyEngine estimates the following for hypothetical single adults, age 40, under 2026 rules. All amounts compare a full model run with the gift against a full model run without it.
+PolicyEngine estimates the following for hypothetical adults, age 40, under 2026 rules. All amounts compare a full model run with the gift against a full model run without it.
 
 | Scenario | Gift | Tax reduction | Change in money retained after the gift |
 | --- | ---: | ---: | ---: |
@@ -17,7 +17,7 @@ A hypothetical Iowa head-of-household filer, age 40, supports an eight-year-old 
 
 A $10 cash gift to an eligible charity qualifies for the 2026 federal deduction for nonitemizers and reduces taxable income to $89,990. Iowa's refundable childcare credit increases from zero to $180 because eligibility requires taxable income below $90,000. Federal income tax falls by $2.20 and Iowa net income tax falls by $180.38. Total tax savings of about $182.58 exceed the gift by $172.58. Both runs use the standard deduction; neither uses a donation tax credit. The new charitable deduction reduces taxable income, while adjusted gross income stays unchanged.
 
-Sources: [Iowa refundable childcare credit instructions](https://revenue.iowa.gov/taxes/tax-guidance/individual-income-tax/1040-expanded-instructions/child-dependent-care-credit), [IRS charitable contributions guidance](https://www.irs.gov/taxtopics/tc506). Run `uv run iowa_counterexample.py` to reproduce the complete before/after calculations in [iowa_counterexample.json](iowa_counterexample.json). Model floating-point arithmetic causes a difference of less than one cent between the direct tax comparison and the net-income comparison; displayed figures use the tax comparison.
+Sources: [Iowa Code §422.7, federal taxable income starting point](https://www.legis.iowa.gov/docs/code/2026/422.7.pdf), [§422.12C, refundable childcare credit](https://www.legis.iowa.gov/docs/code/2026/422.12C.pdf), [Iowa refundable childcare credit instructions](https://revenue.iowa.gov/taxes/tax-guidance/individual-income-tax/1040-expanded-instructions/child-dependent-care-credit), [IRS charitable contributions guidance](https://www.irs.gov/taxtopics/tc506). Run `uv run iowa_counterexample.py` to reproduce the complete before/after calculations in [iowa_counterexample.json](iowa_counterexample.json). Federal Tax Table return rounding can change the precise filed liability. Model floating-point arithmetic also causes a difference of less than one cent between the direct tax comparison and the net-income comparison; displayed figures use the tax comparison.
 
 ## Arizona: a full donation credit
 
@@ -39,7 +39,16 @@ Sources: [HMRC Personal Savings Allowance guidance](https://www.gov.uk/apply-tax
 
 These are household examples, not estimates of how many donors experience these outcomes. The Arizona example uses a credit and the England example uses UK tax rules. The Iowa example establishes a US deduction interaction under the model's 2026 rules. These examples do not describe the return to each additional dollar of giving away from the thresholds.
 
-The original claim appears in [this November 12, 2026 post](https://x.com/Sharkyl/status/2120742568900329482). The analysis uses the released `policyengine==6.19.0` wrapper, which pins `policyengine-us==2.2.1` and `policyengine-uk==2.174.1`. The wrapper computes each scenario; arithmetic only compares outputs and subtracts the gift. No reform, population microdata, or behavioral response is used. Model floats are rounded to cents or pence when displayed. UK modeled liabilities abstract from return-entry rounding.
+The original claim appears in [this November 12, 2026 post](https://x.com/Sharkyl/status/2120742568900329482). The analysis uses the released `policyengine==6.19.0` wrapper, which pins `policyengine-us==2.2.1` and `policyengine-uk==2.174.1`. The wrapper computes each scenario; arithmetic only compares outputs and subtracts the gift. The synthetic examples use no reform, population microdata, or behavioral response. Model floats are rounded to cents or pence when displayed. UK modeled liabilities abstract from return-entry rounding.
+
+The population search runs the certified `populace_us_2024` Microcosm dataset under 2026 policy. It adds ordinary cash gifts to existing donations for each model tax-unit head, preserves all special state-credit inputs, and recomputes taxes, benefits, and net income. Each amount runs in a separate process after a common baseline; the $0 control must reproduce the baseline. `population_search.py` uses MicroSeries for weighted operations and `map_to` for entity transfers. Record-level output stays in ignored `private_outputs/`; summaries contain aggregates only. Apparent gains require a separate check of legal filing choices and numerical precision before any prevalence interpretation.
+
+On Max's machine, run the population work through the shared heavy-job guard:
+
+```sh
+~/reviews/us-hub/scripts/heavy_run.sh donation-search uv run run_population_search.py
+uv run inspect_population.py
+```
 
 ```sh
 uv sync --frozen

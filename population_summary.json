@@ -1,0 +1,88 @@
+{
+  "year": 2026,
+  "versions": {
+    "policyengine": "6.19.0",
+    "policyengine-us": "2.2.1",
+    "policyengine-core": "3.33.3"
+  },
+  "provenance": {
+    "bundle_id": "us-6.19.0",
+    "country_id": "us",
+    "policyengine_version": "6.19.0",
+    "model_package": "policyengine-us",
+    "model_version": "2.2.1",
+    "data_package": "microcosm-data",
+    "data_version": "0.1.0",
+    "default_dataset": "populace_us_2024",
+    "default_dataset_uri": "hf://policyengine/populace-us/populace_us_2024.h5@populace-us-2024-spm-20260915",
+    "certified_data_build_id": "populace-us-2024-spm-20260915",
+    "certified_data_artifact_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+    "data_build_model_version": "2.2.1",
+    "data_build_model_git_sha": null,
+    "data_build_fingerprint": null,
+    "compatibility_basis": "exact_build_model_version",
+    "certified_by": null,
+    "managed_by": "policyengine.py",
+    "runtime_dataset": "populace_us_2024",
+    "runtime_dataset_uri": "hf://policyengine/populace-us/populace_us_2024.h5@populace-us-2024-spm-20260915",
+    "runtime_dataset_source": "data/populace_us_2024.h5",
+    "runtime_dataset_data_package": "microcosm-data",
+    "runtime_dataset_repo_type": "dataset",
+    "runtime_dataset_revision": "populace-us-2024-spm-20260915",
+    "runtime_dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+    "spm": {
+      "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+      "scenario": "ce_trend",
+      "geography_kind": "county",
+      "geography_id": null,
+      "county_vintage": "2020",
+      "as_of": null
+    },
+    "legacy_input_renames": {
+      "would_claim_wic": "takes_up_wic_if_eligible"
+    }
+  },
+  "raw_household_records": 57240,
+  "raw_tax_unit_records": 79729,
+  "raw_tax_unit_records_without_a_head": 252,
+  "design": "Add gift to each model tax-unit head on top of baseline cash gifts; child-only units without a head receive no added gift; no special state donation credit inputs.",
+  "candidate_status": "Unverified screen; individual reruns and source checks required before interpreting as real tax-law exceptions.",
+  "scenarios": [
+    {
+      "additional_gift_per_tax_unit": 0.0,
+      "raw_household_records_better_off": 0,
+      "weighted_households_better_off": 0.0,
+      "weighted_household_share_better_off": 0.0,
+      "raw_households_tax_saving_exceeds_gift": 0,
+      "maximum_net_gain_after_gift": 0.0,
+      "maximum_tax_saving_per_dollar_given": null,
+      "raw_households_with_tax_increase": 0,
+      "raw_households_with_benefit_change": 0,
+      "maximum_accounting_residual": 0.0
+    },
+    {
+      "additional_gift_per_tax_unit": 1.0,
+      "raw_household_records_better_off": 0,
+      "weighted_households_better_off": 0.0,
+      "weighted_household_share_better_off": 0.0,
+      "raw_households_tax_saving_exceeds_gift": 0,
+      "maximum_net_gain_after_gift": -0.15625,
+      "maximum_tax_saving_per_dollar_given": 0.84375,
+      "raw_households_with_tax_increase": 12,
+      "raw_households_with_benefit_change": 0,
+      "maximum_accounting_residual": 0.5
+    },
+    {
+      "additional_gift_per_tax_unit": 10.0,
+      "raw_household_records_better_off": 0,
+      "weighted_households_better_off": 0.0,
+      "weighted_household_share_better_off": 0.0,
+      "raw_households_tax_saving_exceeds_gift": 0,
+      "maximum_net_gain_after_gift": -1.5,
+      "maximum_tax_saving_per_dollar_given": 0.84921875,
+      "raw_households_with_tax_increase": 47,
+      "raw_households_with_benefit_change": 0,
+      "maximum_accounting_residual": 0.5
+    }
+  ]
+}
