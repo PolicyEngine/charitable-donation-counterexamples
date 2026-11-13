@@ -83,6 +83,30 @@
       "raw_households_with_tax_increase": 47,
       "raw_households_with_benefit_change": 0,
       "maximum_accounting_residual": 0.5
+    },
+    {
+      "additional_gift_per_tax_unit": 100.0,
+      "raw_household_records_better_off": 2,
+      "weighted_households_better_off": 0.02514406433328986,
+      "weighted_household_share_better_off": 2.0186631621987543e-10,
+      "raw_households_tax_saving_exceeds_gift": 2,
+      "maximum_net_gain_after_gift": 1166.6416015625,
+      "maximum_tax_saving_per_dollar_given": 12.666529946581509,
+      "raw_households_with_tax_increase": 49,
+      "raw_households_with_benefit_change": 0,
+      "maximum_accounting_residual": 0.125
+    },
+    {
+      "additional_gift_per_tax_unit": 1000.0,
+      "raw_household_records_better_off": 3,
+      "weighted_households_better_off": 0.013704874669201672,
+      "weighted_household_share_better_off": 1.1002805779748212e-10,
+      "raw_households_tax_saving_exceeds_gift": 3,
+      "maximum_net_gain_after_gift": 869.625,
+      "maximum_tax_saving_per_dollar_given": 1.869609375,
+      "raw_households_with_tax_increase": 68,
+      "raw_households_with_benefit_change": 0,
+      "maximum_accounting_residual": 0.5
     }
   ]
 }

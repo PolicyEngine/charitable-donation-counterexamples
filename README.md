@@ -9,6 +9,7 @@ PolicyEngine estimates the following for hypothetical adults, age 40, under 2026
 | Texas, $100,000 wages, ordinary cash donation | $1,000 | $220 | −$780 |
 | Arizona, $100,000 wages, qualifying charity credit | $500 | $500 | $0 |
 | Iowa, single parent with $114,150 wages and $3,000 qualifying childcare costs | $10 | $182.58 | +$172.58 |
+| Kansas, single parent with $30,000 wages and $3,000 qualifying childcare costs | $100 | −$5 | −$105 |
 | England, £49,271 wages plus £1,000 savings interest, Gift Aid | £1 | £100.20 | +£99.20 |
 
 ## Iowa: a deduction restores a refundable childcare credit
@@ -18,6 +19,12 @@ A hypothetical Iowa head-of-household filer, age 40, supports an eight-year-old 
 A $10 cash gift to an eligible charity qualifies for the 2026 federal deduction for nonitemizers and reduces taxable income to $89,990. Iowa's refundable childcare credit increases from zero to $180 because eligibility requires taxable income below $90,000. Federal income tax falls by $2.20 and Iowa net income tax falls by $180.38. Total tax savings of about $182.58 exceed the gift by $172.58. Both runs use the standard deduction; neither uses a donation tax credit. The new charitable deduction reduces taxable income, while adjusted gross income stays unchanged.
 
 Sources: [Iowa Code §422.7, federal taxable income starting point](https://www.legis.iowa.gov/docs/code/2026/422.7.pdf), [§422.12C, refundable childcare credit](https://www.legis.iowa.gov/docs/code/2026/422.12C.pdf), [Iowa refundable childcare credit instructions](https://revenue.iowa.gov/taxes/tax-guidance/individual-income-tax/1040-expanded-instructions/child-dependent-care-credit), [IRS charitable contributions guidance](https://www.irs.gov/taxtopics/tc506). Run `uv run iowa_counterexample.py` to reproduce the complete before/after calculations in [iowa_counterexample.json](iowa_counterexample.json). Federal Tax Table return rounding can change the precise filed liability. Model floating-point arithmetic also causes a difference of less than one cent between the direct tax comparison and the net-income comparison; displayed figures use the tax comparison.
+
+## Kansas: a deduction reduces a linked childcare credit
+
+A hypothetical Kansas head-of-household filer, age 40, supports an eight-year-old, earns $30,000, and pays $3,000 in qualifying childcare expenses. A $100 ordinary cash gift lowers modeled federal tax before credits from $585 to $575. The usable nonrefundable federal childcare credit also falls from $585 to $575, leaving federal net tax unchanged. Kansas matches 50% of the federal childcare credit actually allowed, so the Kansas credit falls by $5. Net state tax rises by $5, and the donor retains $105 less after paying the gift. Benefits, adjusted gross income, and itemization remain unchanged.
+
+Sources: [Kansas Statutes §79-32,111c](https://www.kslegislature.gov/b2025_26/laws/079_000_0000_chapter/079_032_0000_article/079_032_0111c_section/079_032_0111c_k/), [Kansas Notice 24-09](https://www.ksrevenue.gov/taxnotices/notice24-09.pdf), [IRS Form 2441 instructions](https://www.irs.gov/instructions/i2441). Run `uv run kansas_tax_increase.py`; outputs appear in [kansas_tax_increase.json](kansas_tax_increase.json). Model estimates abstract from filing tax-table and whole-dollar rounding.
 
 ## Arizona: a full donation credit
 

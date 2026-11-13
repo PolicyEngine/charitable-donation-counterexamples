@@ -10,11 +10,10 @@ import gc
 import importlib.metadata as md
 import json
 import pickle
-from pathlib import Path
 import time
+from pathlib import Path
 
 import policyengine as pe
-
 
 CORE_OUTPUTS = [
     "household_net_income",

@@ -14,7 +14,6 @@ from policyengine.core.scoping_strategy import RowFilterStrategy
 from inspect_population import read_pickle
 from population_search import log
 
-
 EXTRAS = [
     "household_id",
     "household_net_income",
@@ -31,12 +30,26 @@ EXTRAS = [
     "cdcc_potential",
     "ks_cdcc",
     "nj_cdcc",
-    "ok_cdcc",
-    "me_cdcc",
-    "la_cdcc",
+    "ok_child_care_child_tax_credit",
+    "me_child_care_credit",
+    "la_refundable_cdcc",
+    "la_non_refundable_cdcc",
     "ga_itemizer_credit_potential",
     "ia_cdcc",
     "dc_kccatc",
+    "md_deductions",
+    "md_standard_deduction",
+    "md_itemized_deductions",
+    "md_taxable_income",
+    "md_income_tax",
+    "md_local_income_tax_before_credits",
+    "va_deductions",
+    "va_standard_deduction",
+    "va_itemized_deductions",
+    "va_taxable_income",
+    "va_income_tax",
+    "tax_liability_if_itemizing",
+    "tax_liability_if_not_itemizing",
 ]
 
 
@@ -119,6 +132,9 @@ def main():
                         "gift_per_tax_unit": amount,
                         "mode": mode,
                         "actual_added_gift": float(added_gift),
+                        "net_income_after_gift": float(
+                            out["household_net_income"].iloc[index] - added_gift
+                        ),
                         "change_in_net_income_after_gift": float(
                             out["household_net_income"].iloc[index]
                             - base_out["household_net_income"].iloc[index]
@@ -134,6 +150,20 @@ def main():
             del branch, out
             gc.collect()
             log(f"Finished {name}")
+    # This compares three complete filing configurations per household. Mixed
+    # tax-unit elections within a household could improve further; these are
+    # diagnostic alternatives, not an exhaustive legal-filing optimization.
+    best_resources = {}
+    for row in result_rows:
+        key = (row["household_id"], row["gift_per_tax_unit"])
+        best_resources[key] = max(
+            best_resources.get(key, float("-inf")), row["net_income_after_gift"]
+        )
+    for row in result_rows:
+        key = (row["household_id"], row["gift_per_tax_unit"])
+        row["gain_comparing_best_of_three_filing_configurations"] = (
+            best_resources[key] - best_resources[(row["household_id"], 0)]
+        )
     (private / "candidate_replays.json").write_text(
         json.dumps(result_rows, indent=2) + "\n"
     )

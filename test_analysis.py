@@ -3,11 +3,10 @@
 import json
 from pathlib import Path
 
-from hypothesis import given, strategies as st
 import policyengine as pe
 import pytest
-
-from analyze import uk_savings_case
+from hypothesis import given
+from hypothesis import strategies as st
 
 
 def test_reported_examples():
@@ -35,6 +34,16 @@ def test_iowa_deduction_restores_childcare_credit():
         172.58, abs=0.01
     )
     assert report["net_resource_gain_after_gift"] == pytest.approx(172.58, abs=0.01)
+
+
+def test_kansas_deduction_can_raise_net_tax():
+    report = json.loads(Path("kansas_tax_increase.json").read_text())
+    base, gift = report["before"], report["after"]
+    assert base["income_tax"] == gift["income_tax"]
+    assert base["cdcc"] - gift["cdcc"] == 10
+    assert base["ks_cdcc"] - gift["ks_cdcc"] == 5
+    assert report["net_income_tax_increase"] == 5
+    assert report["resource_change_after_gift"] == -105
 
 
 @pytest.fixture(scope="module")

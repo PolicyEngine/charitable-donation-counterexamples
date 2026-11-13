@@ -1,0 +1,70 @@
+{
+  "hypothetical_household": true,
+  "year": 2026,
+  "versions": {
+    "policyengine": "6.19.0",
+    "policyengine-us": "2.2.1"
+  },
+  "assumptions": [
+    "Kansas full-year resident single parent40, dependent8, qualifying head-of-household",
+    "Annual employment wages30000, no other income/deductions",
+    "3000 unreimbursed employment-related qualifying childcare expenses",
+    "0 versus100 cash gift to eligible public charity, no goods/services or donation-specific credit"
+  ],
+  "before": {
+    "gift": 0,
+    "adjusted_gross_income": 30000.0,
+    "taxable_income": 5850.0,
+    "tax_unit_itemizes": 0.0,
+    "charitable_deduction_for_non_itemizers": 0.0,
+    "income_tax_before_credits": 585.0,
+    "cdcc_potential": 1260.0,
+    "cdcc_credit_limit": 585.0,
+    "cdcc": 585.0,
+    "ks_cdcc": 292.5,
+    "ks_income_tax_before_credits": 521.0399780273438,
+    "ks_taxable_income": 10020.0,
+    "income_tax": -5150.6220703125,
+    "state_income_tax": -358.0657958984375,
+    "tax_unit_childcare_expenses": 3000.0,
+    "ks_nonrefundable_eitc": 228.53997802734375,
+    "ks_refundable_eitc": 358.0657958984375,
+    "ks_total_eitc": 586.6057739257812,
+    "household_benefits": 1013.2757568359375,
+    "household_net_income": 34226.96484375
+  },
+  "after": {
+    "gift": 100,
+    "adjusted_gross_income": 30000.0,
+    "taxable_income": 5750.0,
+    "tax_unit_itemizes": 0.0,
+    "charitable_deduction_for_non_itemizers": 100.0,
+    "income_tax_before_credits": 575.0,
+    "cdcc_potential": 1260.0,
+    "cdcc_credit_limit": 575.0,
+    "cdcc": 575.0,
+    "ks_cdcc": 287.5,
+    "ks_income_tax_before_credits": 521.0399780273438,
+    "ks_taxable_income": 10020.0,
+    "income_tax": -5150.6220703125,
+    "state_income_tax": -353.0657958984375,
+    "tax_unit_childcare_expenses": 3000.0,
+    "ks_nonrefundable_eitc": 233.53997802734375,
+    "ks_refundable_eitc": 353.0657958984375,
+    "ks_total_eitc": 586.6057739257812,
+    "household_benefits": 1013.2757568359375,
+    "household_net_income": 34221.96484375
+  },
+  "net_income_tax_increase": 5.0,
+  "resource_change_after_gift": -105.0,
+  "sources": [
+    "https://www.kslegislature.gov/b2025_26/laws/079_000_0000_chapter/079_032_0000_article/079_032_0111c_section/079_032_0111c_k/",
+    "https://www.ksrevenue.gov/taxnotices/notice24-09.pdf",
+    "https://www.irs.gov/instructions/i2441",
+    "https://www.irs.gov/taxtopics/tc506"
+  ],
+  "limitations": [
+    "PolicyEngine estimates use continuous tax schedules; actual filing tax tables and rounding can change exact dollar amounts",
+    "Childcare costs qualify under assumed employment, provider, dependent and reimbursement rules"
+  ]
+}

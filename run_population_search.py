@@ -1,9 +1,9 @@
 """Run full population scenarios serially, releasing each process's caches."""
 
 import argparse
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 
 def main():

@@ -9,4 +9,5 @@ jobs:
       - run: uv sync --frozen
       - run: uv run analyze.py
       - run: uv run iowa_counterexample.py
+      - run: uv run kansas_tax_increase.py
       - run: uv run pytest -q
