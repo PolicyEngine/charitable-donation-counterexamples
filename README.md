@@ -62,13 +62,19 @@ The national search contains 57,240 household records and 79,729 tax-unit record
 
 All five runs leave modeled cash benefits and ACA premium credits unchanged. Default net income excludes in-kind health benefit values; this is not an exhaustive screening of every health program. The zero-dollar control reproduces every saved baseline variable exactly. Monetary accounting differences are below the documented tolerance for model float precision.
 
-The five candidate observations represent four unique households in Maryland, Virginia, DC, and Nebraska. All change federal itemization status. Candidate counts describe the finite dataset and have not been validated as prevalence estimates. The separate Iowa household example establishes an exception even where this particular finite population screen misses a narrow threshold.
+The five candidate observations represent four unique households in Maryland, Virginia, DC, and Nebraska. All change federal itemization status. A managed replay preserves their native household structure and checks every itemization combination for each household's tax units. **All five gains disappear when the best baseline choice is compared with the best donation choice.** The candidate tax units file jointly or as singles, so the replay does not rely on separately filing spouses making incompatible elections. PolicyEngine's automatic itemization rule compares federal tax only; changing the election can expose state-tax savings already available without the gift. [Maryland's Comptroller explicitly recommends comparing overall tax under both choices](https://services.marylandcomptroller.gov/taxes/en/what-s-new-for-the-2026-tax-filing-season-2025-tax-year?id=kb_article_view&sysparm_article=KB0010023).
+
+The replay also confirms the linked-childcare-credit mechanism in all 12 records whose $1 gift raises modeled household net tax by more than two cents: the allowed federal childcare credit falls, followed by a linked state credit. The Kansas synthetic example above reproduces that mechanism with a $100 gift.
+
+These results describe a finite dataset and chosen increments. The separate Iowa household example establishes an exception even where this particular finite population screen misses a narrow threshold. Candidate counts are not prevalence estimates. See [population_validation_summary.json](population_validation_summary.json) for aggregate replay results.
 
 On Max's machine, run the population work through the shared heavy-job guard:
 
 ```sh
 ~/reviews/us-hub/scripts/heavy_run.sh donation-search uv run run_population_search.py
 uv run inspect_population.py
+~/reviews/us-hub/scripts/heavy_run.sh donation-replay uv run replay_candidates.py
+uv run summarize_replays.py
 ```
 
 ```sh
