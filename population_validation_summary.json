@@ -1,0 +1,24 @@
+{
+  "year": 2026,
+  "candidate_household_scenario_observations": 5,
+  "unique_candidate_households": 4,
+  "candidate_filing_statuses": [
+    "JOINT",
+    "SINGLE"
+  ],
+  "candidate_observations_with_positive_gain_after_comparing_filing_choices": 0,
+  "largest_after_gift_gain_among_candidates_after_filing_comparison": -70.0458984375,
+  "replayed_households": 16,
+  "itemization_configurations_including_automatic_per_amount": 9,
+  "tested_amounts_in_replay": [
+    0,
+    1.0,
+    10.0,
+    100.0,
+    1000.0,
+    10000.0
+  ],
+  "one_dollar_gift_tax_increase_records_confirmed_to_lose_childcare_credits": 12,
+  "interpretation": "All positive national-screen observations disappear when each household's baseline and donation filing choices are compared. The national screen does not prove no legal donation counterexample exists; the separate synthetic Iowa example demonstrates one.",
+  "privacy": "No record identifiers or record-level input files are published."
+}

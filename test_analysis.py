@@ -1,0 +1,95 @@
+"""Check the reported examples and a bounded donation-credit invariant."""
+
+import json
+from pathlib import Path
+
+import policyengine as pe
+import pytest
+from hypothesis import given
+from hypothesis import strategies as st
+
+
+def test_reported_examples():
+    results = json.loads(Path("results.json").read_text())
+    base, gift = results["texas_ordinary"]
+    assert base["federal_income_tax"] - gift["federal_income_tax"] == 220
+    assert gift["net_income_after_gift"] - base["net_income_after_gift"] == -780
+    base, gift = results["arizona_qco"]
+    assert base["state_income_tax"] - gift["state_income_tax"] == 500
+    assert gift["net_income_after_gift"] == base["net_income_after_gift"]
+    base, gift = results["uk_savings"]
+    assert base["savings_allowance"] == 500
+    assert gift["savings_allowance"] == 1_000
+    assert base["income_tax"] - gift["income_tax"] == pytest.approx(100.20, abs=0.01)
+
+
+def test_iowa_deduction_restores_childcare_credit():
+    report = json.loads(Path("iowa_counterexample.json").read_text())
+    base, gift = report["baseline"], report["donation"]
+    assert not base["tax_unit_itemizes"] and not gift["tax_unit_itemizes"]
+    assert base["ia_taxable_income_consolidated"] == 90_000
+    assert gift["ia_taxable_income_consolidated"] == 89_990
+    assert base["ia_cdcc"] == 0 and gift["ia_cdcc"] == 180
+    assert base["household_tax"] - gift["household_tax"] - 10 == pytest.approx(
+        172.58, abs=0.01
+    )
+    assert report["net_resource_gain_after_gift"] == pytest.approx(172.58, abs=0.01)
+
+
+def test_kansas_deduction_can_raise_net_tax():
+    report = json.loads(Path("kansas_tax_increase.json").read_text())
+    base, gift = report["before"], report["after"]
+    assert base["income_tax"] == gift["income_tax"]
+    assert base["cdcc"] - gift["cdcc"] == 10
+    assert base["ks_cdcc"] - gift["ks_cdcc"] == 5
+    assert report["net_income_tax_increase"] == 5
+    assert report["resource_change_after_gift"] == -105
+
+
+@pytest.fixture(scope="module")
+def az_sweep():
+    return pe.us.calculate_household(
+        people=[{"age": 40, "employment_income": 100_000}],
+        tax_unit={"filing_status": "SINGLE"},
+        household={"state_code": "AZ", "county_fips": "04013"},
+        year=2026,
+        axes=[
+            [
+                {
+                    "name": "az_charitable_contributions_to_qualifying_charitable_organizations",
+                    "min": 0,
+                    "max": 500,
+                    "count": 501,
+                }
+            ]
+        ],
+        extra_variables=["az_charitable_contributions_credit", "state_income_tax"],
+    )
+
+
+@given(donation=st.integers(min_value=0, max_value=500))
+def test_qco_full_credit_for_gifts_below_cap(az_sweep, donation):
+    """Enough tax liability: each dollar of gift replaces a dollar of tax."""
+    tax = az_sweep.tax_unit.state_income_tax
+    credit = az_sweep.tax_unit.az_charitable_contributions_credit
+    assert 0 <= credit[donation] <= donation
+    assert tax[0] - tax[donation] == pytest.approx(donation, abs=0.01)
+
+
+def test_uk_individual_and_axis_paths_agree():
+    """Differential check of scalar runs against a vectorized sweep."""
+    result = pe.uk.calculate_household(
+        people=[
+            {"age": 40, "employment_income": 49_271, "savings_interest_income": 1_000}
+        ],
+        household={"region": "LONDON"},
+        year=2026,
+        axes=[[{"name": "gift_aid", "min": 0, "max": 2, "count": 3}]],
+        extra_variables=["income_tax", "savings_allowance"],
+    )
+    saved = json.loads(Path("results.json").read_text())["uk_savings"]
+    for index, row in enumerate(saved):
+        assert result.person[0].income_tax[index] == pytest.approx(
+            row["income_tax"], abs=0.01
+        )
+    assert result.person[0].savings_allowance == [500, 1_000, 1_000]
