@@ -1,7 +1,8 @@
 {
   "versions": {
     "policyengine": "6.19.0",
-    "policyengine-us": "2.2.1"
+    "policyengine-us": "2.2.1",
+    "policyengine-uk": "2.174.1"
   },
   "year": 2026,
   "hypothetical_households": true,
@@ -47,6 +48,28 @@
       "nonitemizer_deduction": 0.0,
       "net_income_before_gift": 77573.75,
       "net_income_after_gift": 77073.75
+    }
+  ],
+  "uk_savings": [
+    {
+      "donation": 0,
+      "income_tax": 7440.400390625,
+      "savings_allowance": 500.0,
+      "savings_income_tax": 100.20000457763672,
+      "grossed_up_gift": 0.0,
+      "net_income": 50271.0,
+      "allowances": 12570.0,
+      "adjusted_net_income": 50271.0
+    },
+    {
+      "donation": 1,
+      "income_tax": 7340.2001953125,
+      "savings_allowance": 1000.0,
+      "savings_income_tax": 0.0,
+      "grossed_up_gift": 1.25,
+      "net_income": 50271.0,
+      "allowances": 12570.0,
+      "adjusted_net_income": 50269.75
     }
   ]
 }

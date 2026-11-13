@@ -11,20 +11,34 @@ def us_case(state: str, donation: float, *, qco: bool = False) -> dict:
     # A full state credit removes the gift's federal charitable deduction.
     # These two inputs therefore represent different statutory treatments.
     result = pe.us.calculate_household(
-        people=[{
-            "age": 40,
-            "employment_income": 100_000,
-            "charitable_cash_donations": 0 if qco else donation,
-        }],
+        people=[
+            {
+                "age": 40,
+                "employment_income": 100_000,
+                "charitable_cash_donations": 0 if qco else donation,
+            }
+        ],
         tax_unit={
             "filing_status": "SINGLE",
-            **({"az_charitable_contributions_to_qualifying_charitable_organizations": donation} if qco else {}),
+            **(
+                {
+                    "az_charitable_contributions_to_qualifying_charitable_organizations": donation
+                }
+                if qco
+                else {}
+            ),
         },
-        household={"state_code": state, "county_fips": "04013" if state == "AZ" else "48201"},
+        household={
+            "state_code": state,
+            "county_fips": "04013" if state == "AZ" else "48201",
+        },
         year=2026,
         extra_variables=[
-            "income_tax", "state_income_tax", "charitable_deduction_for_non_itemizers",
-            "az_charitable_contributions_credit", "household_tax",
+            "income_tax",
+            "state_income_tax",
+            "charitable_deduction_for_non_itemizers",
+            "az_charitable_contributions_credit",
+            "household_tax",
         ],
     )
     return {
@@ -41,17 +55,24 @@ def us_case(state: str, donation: float, *, qco: bool = False) -> dict:
 
 def uk_savings_case(donation: float) -> dict:
     result = pe.uk.calculate_household(
-        people=[{
-            "age": 40,
-            "employment_income": 49_271,
-            "savings_interest_income": 1_000,
-            "gift_aid": donation,
-        }],
+        people=[
+            {
+                "age": 40,
+                "employment_income": 49_271,
+                "savings_interest_income": 1_000,
+                "gift_aid": donation,
+            }
+        ],
         household={"region": "LONDON"},
         year=2026,
         extra_variables=[
-            "income_tax", "savings_allowance", "savings_income_tax", "gift_aid_grossed_up",
-            "net_income", "allowances", "adjusted_net_income",
+            "income_tax",
+            "savings_allowance",
+            "savings_income_tax",
+            "gift_aid_grossed_up",
+            "net_income",
+            "allowances",
+            "adjusted_net_income",
         ],
     )
     person = result.person[0]
@@ -69,7 +90,10 @@ def uk_savings_case(donation: float) -> dict:
 
 def main():
     results = {
-        "versions": {p: md.version(p) for p in ["policyengine", "policyengine-us", "policyengine-uk"]},
+        "versions": {
+            p: md.version(p)
+            for p in ["policyengine", "policyengine-us", "policyengine-uk"]
+        },
         "year": 2026,
         "hypothetical_households": True,
         "texas_ordinary": [us_case("TX", d) for d in (0, 1_000)],
