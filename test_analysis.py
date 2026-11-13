@@ -24,6 +24,19 @@ def test_reported_examples():
     assert base["income_tax"] - gift["income_tax"] == pytest.approx(100.20, abs=0.01)
 
 
+def test_iowa_deduction_restores_childcare_credit():
+    report = json.loads(Path("iowa_counterexample.json").read_text())
+    base, gift = report["baseline"], report["donation"]
+    assert not base["tax_unit_itemizes"] and not gift["tax_unit_itemizes"]
+    assert base["ia_taxable_income_consolidated"] == 90_000
+    assert gift["ia_taxable_income_consolidated"] == 89_990
+    assert base["ia_cdcc"] == 0 and gift["ia_cdcc"] == 180
+    assert base["household_tax"] - gift["household_tax"] - 10 == pytest.approx(
+        172.58, abs=0.01
+    )
+    assert report["net_resource_gain_after_gift"] == pytest.approx(172.58, abs=0.01)
+
+
 @pytest.fixture(scope="module")
 def az_sweep():
     return pe.us.calculate_household(

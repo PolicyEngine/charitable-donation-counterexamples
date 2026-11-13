@@ -1,0 +1,70 @@
+{
+  "hypothetical_household": true,
+  "year": 2026,
+  "versions": {
+    "policyengine": "6.19.0",
+    "policyengine-us": "2.2.1"
+  },
+  "assumptions": [
+    "Iowa resident, single parent age40, dependent age4, qualifying HOH filing status",
+    "Employment wages114150, no other income or deductions",
+    "3000 of unreimbursed employment-related qualifying childcare expenses",
+    "10 cash donation to eligible public charity, no goods/services or state credit",
+    "No itemization before or after donation"
+  ],
+  "baseline": {
+    "gift": 0,
+    "wages": 114150,
+    "adjusted_gross_income": 114150.0,
+    "taxable_income": 90000.0,
+    "taxable_income_deductions": 24150.0,
+    "standard_deduction": 24150.0,
+    "tax_unit_itemizes": 0.0,
+    "charitable_deduction_for_non_itemizers": 0.0,
+    "charitable_deduction": 0.0,
+    "ia_taxable_income_consolidated": 90000.0,
+    "ia_cdcc": 0.0,
+    "cdcc_potential": 600.0,
+    "cdcc": 600.0,
+    "tax_unit_childcare_expenses": 3000.0,
+    "income_tax": 9901.0,
+    "state_income_tax": 3300.0,
+    "household_benefits": 0.0,
+    "household_tax": 21933.474609375,
+    "household_refundable_tax_credits": 0.0,
+    "child_care_subsidies": 0.0,
+    "household_net_income": 92216.5234375,
+    "after_gift_resources": 92216.5234375
+  },
+  "donation": {
+    "gift": 10,
+    "wages": 114150,
+    "adjusted_gross_income": 114150.0,
+    "taxable_income": 89990.0,
+    "taxable_income_deductions": 24160.0,
+    "standard_deduction": 24150.0,
+    "tax_unit_itemizes": 0.0,
+    "charitable_deduction_for_non_itemizers": 10.0,
+    "charitable_deduction": 0.0,
+    "ia_taxable_income_consolidated": 89990.0,
+    "ia_cdcc": 180.0,
+    "cdcc_potential": 600.0,
+    "cdcc": 600.0,
+    "tax_unit_childcare_expenses": 3000.0,
+    "income_tax": 9898.7998046875,
+    "state_income_tax": 3119.6201171875,
+    "household_benefits": 0.0,
+    "household_tax": 21750.89453125,
+    "household_refundable_tax_credits": 180.0,
+    "child_care_subsidies": 0.0,
+    "household_net_income": 92399.109375,
+    "after_gift_resources": 92389.109375
+  },
+  "net_resource_gain_after_gift": 172.5859375,
+  "federal_income_tax_saving": 2.2001953125,
+  "state_income_tax_saving": 180.3798828125,
+  "sources": [
+    "https://revenue.iowa.gov/taxes/tax-guidance/individual-income-tax/1040-expanded-instructions/child-dependent-care-credit",
+    "https://www.irs.gov/taxtopics/tc506"
+  ]
+}

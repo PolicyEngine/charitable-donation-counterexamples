@@ -8,7 +8,16 @@ PolicyEngine estimates the following for hypothetical single adults, age 40, und
 | --- | ---: | ---: | ---: |
 | Texas, $100,000 wages, ordinary cash donation | $1,000 | $220 | −$780 |
 | Arizona, $100,000 wages, qualifying charity credit | $500 | $500 | $0 |
+| Iowa, single parent with $114,150 wages and $3,000 qualifying childcare costs | $10 | $182.58 | +$172.58 |
 | England, £49,271 wages plus £1,000 savings interest, Gift Aid | £1 | £100.20 | +£99.20 |
+
+## Iowa: a deduction restores a refundable childcare credit
+
+A hypothetical Iowa head-of-household filer, age 40, supports a four-year-old and pays $3,000 in unreimbursed, employment-related qualifying childcare expenses. The parent earns $114,150 and has no other income or deductions. Before giving, the $24,150 standard deduction leaves federal and Iowa taxable income at $90,000.
+
+A $10 cash gift to an eligible charity qualifies for the 2026 federal deduction for nonitemizers and reduces taxable income to $89,990. Iowa's refundable childcare credit increases from zero to $180 because eligibility requires taxable income below $90,000. Federal income tax falls by $2.20 and Iowa net income tax falls by $180.38. Total tax savings of about $182.58 exceed the gift by $172.58. Both runs use the standard deduction; neither uses a donation tax credit. The new charitable deduction reduces taxable income, while adjusted gross income stays unchanged.
+
+Sources: [Iowa refundable childcare credit instructions](https://revenue.iowa.gov/taxes/tax-guidance/individual-income-tax/1040-expanded-instructions/child-dependent-care-credit), [IRS charitable contributions guidance](https://www.irs.gov/taxtopics/tc506). Run `uv run iowa_counterexample.py` to reproduce the complete before/after calculations in [iowa_counterexample.json](iowa_counterexample.json). Model floating-point arithmetic causes a difference of less than one cent between the direct tax comparison and the net-income comparison; displayed figures use the tax comparison.
 
 ## Arizona: a full donation credit
 
@@ -28,7 +37,7 @@ Sources: [HMRC Personal Savings Allowance guidance](https://www.gov.uk/apply-tax
 
 ## Scope and reproducibility
 
-These are household examples, not estimates of how many donors experience these outcomes. The Arizona example does not establish a deduction-only US exception. The England example does not establish a US exception. This bounded search does not prove that US deductions can never produce a net gain.
+These are household examples, not estimates of how many donors experience these outcomes. The Arizona example uses a credit and the England example uses UK tax rules. The Iowa example establishes a US deduction interaction under the model's 2026 rules. These examples do not describe the return to each additional dollar of giving away from the thresholds.
 
 The original claim appears in [this November 12, 2026 post](https://x.com/Sharkyl/status/2120742568900329482). The analysis uses the released `policyengine==6.19.0` wrapper, which pins `policyengine-us==2.2.1` and `policyengine-uk==2.174.1`. The wrapper computes each scenario; arithmetic only compares outputs and subtracts the gift. No reform, population microdata, or behavioral response is used. Model floats are rounded to cents or pence when displayed. UK modeled liabilities abstract from return-entry rounding.
 

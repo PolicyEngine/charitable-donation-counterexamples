@@ -8,4 +8,5 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --frozen
       - run: uv run analyze.py
+      - run: uv run iowa_counterexample.py
       - run: uv run pytest -q
