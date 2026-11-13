@@ -1,0 +1,52 @@
+{
+  "versions": {
+    "policyengine": "6.19.0",
+    "policyengine-us": "2.2.1"
+  },
+  "year": 2026,
+  "hypothetical_households": true,
+  "texas_ordinary": [
+    {
+      "donation": 0,
+      "federal_income_tax": 13170.0,
+      "state_income_tax": 0.0,
+      "household_tax": 20820.0,
+      "az_charitable_credit": 0.0,
+      "nonitemizer_deduction": 0.0,
+      "net_income_before_gift": 79180.0,
+      "net_income_after_gift": 79180.0
+    },
+    {
+      "donation": 1000,
+      "federal_income_tax": 12950.0,
+      "state_income_tax": 0.0,
+      "household_tax": 20600.0,
+      "az_charitable_credit": 0.0,
+      "nonitemizer_deduction": 1000.0,
+      "net_income_before_gift": 79400.0,
+      "net_income_after_gift": 78400.0
+    }
+  ],
+  "arizona_qco": [
+    {
+      "donation": 0,
+      "federal_income_tax": 13170.0,
+      "state_income_tax": 2106.25,
+      "household_tax": 22926.25,
+      "az_charitable_credit": 0.0,
+      "nonitemizer_deduction": 0.0,
+      "net_income_before_gift": 77073.75,
+      "net_income_after_gift": 77073.75
+    },
+    {
+      "donation": 500,
+      "federal_income_tax": 13170.0,
+      "state_income_tax": 1606.25,
+      "household_tax": 22426.25,
+      "az_charitable_credit": 500.0,
+      "nonitemizer_deduction": 0.0,
+      "net_income_before_gift": 77573.75,
+      "net_income_after_gift": 77073.75
+    }
+  ]
+}
