@@ -1,7 +1,7 @@
 """Replay unusual records in a closed, managed household cohort.
 
 Outputs contain record-level values and therefore stay ignored. The replay
-compares automatic itemization with two alternative legal filing choices.
+enumerates tax-unit itemization choices within each selected household.
 """
 
 import gc
@@ -80,7 +80,7 @@ def main():
             selected.add(int(value))
         # Include records where the smallest gift increased state tax.
         if amount == 1:
-            for value in ids[result["delta"]["state_income_tax"] > 0.02]:
+            for value in ids[result["delta"]["household_tax"] > 0.02]:
                 selected.add(int(value))
         scenarios.append(amount)
     if not selected:
@@ -109,15 +109,48 @@ def main():
     cash = base.calc("charitable_cash_donations", period=2026)
     heads = base.calc("is_tax_unit_head", period=2026)
     units = base.calc("tax_unit_id", period=2026)
+    person_units = base.calc("tax_unit_id", period=2026, map_to="person")
+    person_households = base.calc("household_id", period=2026, map_to="person")
+    # Only structural ID memberships are handled here; monetary quantities
+    # and weights continue to use the engine's entity mapping.
+    unit_household = {}
+    for unit_id, household_id in zip(person_units, person_households):
+        previous = unit_household.setdefault(int(unit_id), int(household_id))
+        assert previous == int(household_id)
+    household_units = {}
+    unit_rank = {}
+    for unit_id in units:
+        group = household_units.setdefault(unit_household[int(unit_id)], [])
+        unit_rank[int(unit_id)] = len(group)
+        group.append(int(unit_id))
+    max_units = max(len(group) for group in household_units.values())
+    assert max_units <= 6, "Split a cohort with many tax units into smaller replays"
+    ranks = units.map(unit_rank)
+    modes = ["automatic", *range(2**max_units)]
+    filing_status = base.calc("filing_status", period=2026)
+    unit_context = [
+        {
+            "household_id": unit_household[int(unit_id)],
+            "tax_unit_id": int(unit_id),
+            "rank": unit_rank[int(unit_id)],
+            "filing_status": str(filing_status.iloc[index]),
+        }
+        for index, unit_id in enumerate(units)
+    ]
+    (private / "replay_unit_context.json").write_text(
+        json.dumps(unit_context, indent=2) + "\n"
+    )
     result_rows = []
     for amount in [0, *scenarios]:
-        for mode in ("automatic", "standard", "itemized"):
+        for mode in modes:
             name = f"replay_{amount:g}_{mode}"
             branch = base.get_branch(name)
             branch.set_input("charitable_cash_donations", 2026, cash + heads * amount)
             if mode != "automatic":
                 branch.set_input(
-                    "tax_unit_itemizes", 2026, units * 0 + int(mode == "itemized")
+                    "tax_unit_itemizes",
+                    2026,
+                    ranks.map(lambda rank, mode=mode: (mode >> int(rank)) & 1),
                 )
             branch.drop_computed_arrays()
             out = snapshot(branch)
@@ -150,9 +183,8 @@ def main():
             del branch, out
             gc.collect()
             log(f"Finished {name}")
-    # This compares three complete filing configurations per household. Mixed
-    # tax-unit elections within a household could improve further; these are
-    # diagnostic alternatives, not an exhaustive legal-filing optimization.
+    # Compare each household's best baseline and donation configurations,
+    # including mixed elections in households containing multiple tax units.
     best_resources = {}
     for row in result_rows:
         key = (row["household_id"], row["gift_per_tax_unit"])
@@ -161,7 +193,7 @@ def main():
         )
     for row in result_rows:
         key = (row["household_id"], row["gift_per_tax_unit"])
-        row["gain_comparing_best_of_three_filing_configurations"] = (
+        row["gain_comparing_best_filing_configuration"] = (
             best_resources[key] - best_resources[(row["household_id"], 0)]
         )
     (private / "candidate_replays.json").write_text(

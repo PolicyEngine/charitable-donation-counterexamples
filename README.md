@@ -50,6 +50,20 @@ The original claim appears in [this November 12, 2026 post](https://x.com/Sharky
 
 The population search runs the certified `populace_us_2024` Microcosm dataset under 2026 policy. It adds ordinary cash gifts to existing donations for each model tax-unit head, preserves all special state-credit inputs, and recomputes taxes, benefits, and net income. Each amount runs in a separate process after a common baseline; the $0 control must reproduce the baseline. `population_search.py` uses MicroSeries for weighted operations and `map_to` for entity transfers. Record-level output stays in ignored `private_outputs/`; summaries contain aggregates only. Apparent gains require a separate check of legal filing choices and numerical precision before any prevalence interpretation.
 
+The national search contains 57,240 household records and 79,729 tax-unit records. Each model tax-unit head receives the added gift; 252 child-only units have no adult head and receive none. The same household can contain multiple donating tax units. Five full donation runs and a separate zero-dollar control produced:
+
+| Additional gift per donating tax unit | Weighted tax reduction as a share of added gifts | Raw household candidates with gains exceeding gifts |
+| --- | ---: | ---: |
+| $1 | 10.77% | 0 |
+| $10 | 10.76% | 0 |
+| $100 | 10.78% | 2 |
+| $1,000 | 10.87% | 3 |
+| $10,000 | 5.21% | 0 |
+
+All five runs leave modeled cash benefits and ACA premium credits unchanged. Default net income excludes in-kind health benefit values; this is not an exhaustive screening of every health program. The zero-dollar control reproduces every saved baseline variable exactly. Monetary accounting differences are below the documented tolerance for model float precision.
+
+The five candidate observations represent four unique households in Maryland, Virginia, DC, and Nebraska. All change federal itemization status. Candidate counts describe the finite dataset and have not been validated as prevalence estimates. The separate Iowa household example establishes an exception even where this particular finite population screen misses a narrow threshold.
+
 On Max's machine, run the population work through the shared heavy-job guard:
 
 ```sh

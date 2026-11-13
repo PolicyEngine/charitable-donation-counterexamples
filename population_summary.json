@@ -107,6 +107,18 @@
       "raw_households_with_tax_increase": 68,
       "raw_households_with_benefit_change": 0,
       "maximum_accounting_residual": 0.5
+    },
+    {
+      "additional_gift_per_tax_unit": 10000.0,
+      "raw_household_records_better_off": 0,
+      "weighted_households_better_off": 0.0,
+      "weighted_household_share_better_off": 0.0,
+      "raw_households_tax_saving_exceeds_gift": 0,
+      "maximum_net_gain_after_gift": -3989.15625,
+      "maximum_tax_saving_per_dollar_given": 0.6010859375,
+      "raw_households_with_tax_increase": 86,
+      "raw_households_with_benefit_change": 0,
+      "maximum_accounting_residual": 0.25
     }
   ]
 }

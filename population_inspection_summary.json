@@ -49,5 +49,41 @@
     "tax_reduction_share_of_added_gifts": 0.10775200312945736,
     "maximum_cash_benefit_change": 0.0,
     "maximum_aca_credit_change": 0.0
+  },
+  {
+    "additional_gift_per_tax_unit": 1000.0,
+    "unverified_candidate_counts_by_state": {
+      "DC": {
+        "raw_records": 1,
+        "weighted_households": 0.005662649404257536,
+        "maximum_net_gain": 869.625
+      },
+      "NE": {
+        "raw_records": 1,
+        "weighted_households": 0.0018996187718585134,
+        "maximum_net_gain": 644.125
+      },
+      "MD": {
+        "raw_records": 1,
+        "weighted_households": 0.006142606493085623,
+        "maximum_net_gain": 536.1884765625
+      }
+    },
+    "mean_added_gift_per_household": 1326.9887887460939,
+    "mean_household_tax_reduction": 144.26140799904482,
+    "mean_net_income_change_after_gift": -1182.7273883090104,
+    "tax_reduction_share_of_added_gifts": 0.10871335856225368,
+    "maximum_cash_benefit_change": 0.0,
+    "maximum_aca_credit_change": 0.0
+  },
+  {
+    "additional_gift_per_tax_unit": 10000.0,
+    "unverified_candidate_counts_by_state": {},
+    "mean_added_gift_per_household": 13269.887880576942,
+    "mean_household_tax_reduction": 691.5243522315543,
+    "mean_net_income_change_after_gift": -12578.363517271748,
+    "tax_reduction_share_of_added_gifts": 0.05211229804313076,
+    "maximum_cash_benefit_change": 0.0,
+    "maximum_aca_credit_change": 0.0
   }
 ]
