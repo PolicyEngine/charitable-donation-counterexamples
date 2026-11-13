@@ -6,7 +6,7 @@
     "mean_household_tax_reduction": 0.0,
     "mean_net_income_change_after_gift": 0.0,
     "tax_reduction_share_of_added_gifts": null,
-    "maximum_cash_benefit_change": 0.0,
+    "maximum_household_benefit_change": 0.0,
     "maximum_aca_credit_change": 0.0
   },
   {
@@ -16,7 +16,7 @@
     "mean_household_tax_reduction": 0.14285438085145533,
     "mean_net_income_change_after_gift": -1.1840657147618658,
     "tax_reduction_share_of_added_gifts": 0.10765304231883706,
-    "maximum_cash_benefit_change": 0.0,
+    "maximum_household_benefit_change": 0.0,
     "maximum_aca_credit_change": 0.0
   },
   {
@@ -26,7 +26,7 @@
     "mean_household_tax_reduction": 1.4283804282625818,
     "mean_net_income_change_after_gift": -11.841515109672706,
     "tax_reduction_share_of_added_gifts": 0.10764073139760982,
-    "maximum_cash_benefit_change": 0.0,
+    "maximum_household_benefit_change": 0.0,
     "maximum_aca_credit_change": 0.0
   },
   {
@@ -47,7 +47,7 @@
     "mean_household_tax_reduction": 14.29857003263396,
     "mean_net_income_change_after_gift": -118.4003693929688,
     "tax_reduction_share_of_added_gifts": 0.10775200312945736,
-    "maximum_cash_benefit_change": 0.0,
+    "maximum_household_benefit_change": 0.0,
     "maximum_aca_credit_change": 0.0
   },
   {
@@ -73,7 +73,7 @@
     "mean_household_tax_reduction": 144.26140799904482,
     "mean_net_income_change_after_gift": -1182.7273883090104,
     "tax_reduction_share_of_added_gifts": 0.10871335856225368,
-    "maximum_cash_benefit_change": 0.0,
+    "maximum_household_benefit_change": 0.0,
     "maximum_aca_credit_change": 0.0
   },
   {
@@ -83,7 +83,7 @@
     "mean_household_tax_reduction": 691.5243522315543,
     "mean_net_income_change_after_gift": -12578.363517271748,
     "tax_reduction_share_of_added_gifts": 0.05211229804313076,
-    "maximum_cash_benefit_change": 0.0,
+    "maximum_household_benefit_change": 0.0,
     "maximum_aca_credit_change": 0.0
   }
 ]

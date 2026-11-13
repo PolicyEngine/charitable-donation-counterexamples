@@ -53,7 +53,7 @@ def main():
             )
             if amount
             else None,
-            "maximum_cash_benefit_change": float(
+            "maximum_household_benefit_change": float(
                 result["delta"]["household_benefits"].abs().max()
             ),
             "maximum_aca_credit_change": float(result["delta"]["aca_ptc"].abs().max()),
